@@ -1,9 +1,12 @@
-from sqlalchemy import Column, Integer, String
-from ..database import Base
+from typing import Annotated
 
-class User(Base):
-    __tablename__ = "users"
+from fastapi import Depends, FastAPI, HTTPException, Query
+from sqlmodel import Field, Session, SQLModel, create_engine, select
 
-    id = Column(Integer, primary_key=True, index=True)
-    username = Column(String(50), unique=True, nullable=False, index=True)
-    password = Column(String(255), nullable=False)
+
+class User(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    username: str = Field(index=True)
+    password: str = Field(index=True)
+
+# Code below omitted 👇
