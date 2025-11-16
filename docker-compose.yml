@@ -1,10 +1,18 @@
 services:
   db:
-    image: mysql:8
+    image: mysql:8.0
     ports:
       - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
     env_file:
       - .env
     volumes:
-      - ./mysql:/var/lib/mysql
+      - mysql_data:/var/lib/mysql  # Changed to named volume
     restart: on-failure
+
+volumes:
+  mysql_data:  # Define the named volume
