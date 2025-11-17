@@ -1,8 +1,9 @@
-from fastapi import APIRouter, FastAPI
-from src.auth.router import auth_router
+from fastapi import FastAPI
 from sqlmodel import SQLModel, Session
-from src.database import engine
-from src.trees.router import tree_router
+from .auth.router import auth_router
+from .database import engine
+from .trees.router import tree_router
+import uvicorn
 
 app = FastAPI()
 
@@ -16,5 +17,5 @@ def get_session():
 
 
 app.include_router(auth_router, tags=["auth"])
-
 app.include_router(tree_router, tags=["trees"])
+
