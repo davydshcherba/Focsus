@@ -2,11 +2,18 @@ from fastapi import FastAPI
 from sqlmodel import SQLModel, Session
 from .auth.router import auth_router
 from .database import engine
-from .trees.router import tree_router
 import uvicorn
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 SQLModel.metadata.create_all(engine)
 
@@ -17,5 +24,4 @@ def get_session():
 
 
 app.include_router(auth_router, tags=["auth"])
-app.include_router(tree_router, tags=["trees"])
 

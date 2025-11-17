@@ -5,3 +5,4 @@ class User(SQLModel, table=True):
     username: str = Field(index=True)
     password: str
     is_admin: bool = Field(default=False)
+    points: int = Field(default=0)
