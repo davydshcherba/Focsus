@@ -4,43 +4,65 @@ export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
-  const LOGIN_URL = "http://127.0.0.1:8000/login";
+const LOGIN_URL = "http://localhost:8000/login"; // замість 127.0.0.1
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setError(null);
+  setSuccess(null);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError(null);
-    setSuccess(null);
+  if (!username || !password) {
+    setError("Вкажіть логін та пароль");
+    return;
+  }
 
-    if (!username || !password) {
-      setError("Вкажіть логін та пароль");
-      return;
-    }
+  setLoading(true);
+  console.log("=== ПОЧАТОК ЗАПИТУ ===");
+  console.log("URL:", LOGIN_URL);
+  console.log("Дані:", { username, password });
 
-    setLoading(true);
-    try {
-      const res = await fetch(LOGIN_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-      });
+  try {
+    console.log("Відправляємо запит...");
+    
+    const res = await fetch(LOGIN_URL, {
+      method: "POST",
+      headers: { 
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({ username, password }),
+    });
 
-      const data = await res.json().catch(() => null);
+    console.log("Статус відповіді:", res.status);
+    console.log("Headers:", res.headers);
 
-      if (!res.ok) {
-        setError(data?.detail || data?.message || `Помилка ${res.status}`);
-      } else {
-        setSuccess("Успішний вхід");
+    const data = await res.json();
+    console.log("Отримані дані:", data);
+
+    if (!res.ok) {
+      setError(data?.detail || data?.message || `Помилка ${res.status}`);
+    } else {
+      setSuccess("Успішний вхід");
+      
+      if (data.access_token) {
+        localStorage.setItem("access_token", data.access_token);
+        console.log("✅ Токен збережено");
       }
-    } catch (err) {
-      setError("Не вдалося підключитися до сервера");
-    } finally {
-      setLoading(false);
-    }
-  };
 
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 1000);
+    }
+  } catch (err) {
+    console.error("❌ ПОМИЛКА:", err);
+    console.error("Тип помилки:", err instanceof TypeError ? "TypeError" : typeof err);
+    setError("Не вдалося підключитися до сервера");
+  } finally {
+    setLoading(false);
+  }
+};
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-900 px-4">
       <form
