@@ -120,6 +120,7 @@ def get_current_user(
             "points": user.points,
         }
     }
+    
 @auth_router.post("/logout")
 def logout(response: Response):
     response.delete_cookie(key=config.JWT_ACCESS_COOKIE_NAME)
