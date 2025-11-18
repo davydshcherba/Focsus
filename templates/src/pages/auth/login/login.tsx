@@ -7,24 +7,20 @@ export default function Login() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-const LOGIN_URL = "http://localhost:8000/login"; // замість 127.0.0.1
+const LOGIN_URL = "http://localhost:8000/login"; 
 const handleSubmit = async (e: React.FormEvent) => { 
   e.preventDefault();
   setError(null);
   setSuccess(null);
 
   if (!username || !password) {
-    setError("Вкажіть логін та пароль");
+    setError("Please enter username and password");
     return;
   }
 
   setLoading(true);
-  console.log("=== ПОЧАТОК ЗАПИТУ ===");
-  console.log("URL:", LOGIN_URL);
-  console.log("Дані:", { username, password });
 
   try {
-    console.log("Відправляємо запит...");
     
     const res = await fetch(LOGIN_URL, {
       method: "POST",
@@ -35,20 +31,16 @@ const handleSubmit = async (e: React.FormEvent) => {
       body: JSON.stringify({ username, password }),
     });
 
-    console.log("Статус відповіді:", res.status);
-    console.log("Headers:", res.headers);
 
     const data = await res.json();
-    console.log("Отримані дані:", data);
 
     if (!res.ok) {
-      setError(data?.detail || data?.message || `Помилка ${res.status}`);
+      setError(data?.detail || data?.message || `Error ${res.status}`);
     } else {
-      setSuccess("Успішний вхід");
+      setSuccess("Login successful");
       
       if (data.access_token) {
         localStorage.setItem("access_token", data.access_token);
-        console.log("✅ Токен збережено");
       }
 
       setTimeout(() => {
@@ -56,9 +48,7 @@ const handleSubmit = async (e: React.FormEvent) => {
       }, 1000);
     }
   } catch (err) {
-    console.error("❌ ПОМИЛКА:", err);
-    console.error("Тип помилки:", err instanceof TypeError ? "TypeError" : typeof err);
-    setError("Не вдалося підключитися до сервера");
+    setError("Something went wrong, try again");
   } finally {
     setLoading(false);
   }
@@ -70,7 +60,7 @@ const handleSubmit = async (e: React.FormEvent) => {
         className="w-full max-w-md bg-gray-800 p-8 rounded-2xl shadow-xl border border-gray-700 space-y-5"
       >
         <h2 className="text-3xl font-bold text-white text-center mb-2">
-          Увійти
+          Login
         </h2>
 
         {error && (
@@ -87,24 +77,24 @@ const handleSubmit = async (e: React.FormEvent) => {
 
         {/* Username */}
         <div>
-          <label className="text-gray-300 text-sm">Логін</label>
+          <label className="text-gray-300 text-sm">Username</label>
           <input
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            placeholder="Ваш логін"
+            placeholder="Your username"
             className="w-full mt-1 p-3 bg-gray-700 border border-gray-600 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
         </div>
 
         {/* Password */}
         <div>
-          <label className="text-gray-300 text-sm">Пароль</label>
+          <label className="text-gray-300 text-sm">Password</label>
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="Пароль"
+            placeholder="Your password"
             className="w-full mt-1 p-3 bg-gray-700 border border-gray-600 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
         </div>
@@ -115,7 +105,7 @@ const handleSubmit = async (e: React.FormEvent) => {
           disabled={loading}
           className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 transition rounded-xl text-white font-semibold shadow-lg disabled:opacity-50 active:scale-95"
         >
-          {loading ? "Вхід..." : "Увійти"}
+          {loading ? "Loading..." : "Login"}
         </button>
 
         <p className="text-xs text-gray-400 text-center">POST → {LOGIN_URL}</p>

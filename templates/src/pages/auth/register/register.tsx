@@ -19,17 +19,17 @@ export default function Register() {
     setSuccess("");
 
     try {
-      const res = await fetch("http://127.0.0.1:8000/register", {
+      const res = await fetch("http://localhost:8000/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
-      if (!res.ok) throw new Error("Помилка реєстрації");
+      if (!res.ok) throw new Error("Registration error");
 
-      setSuccess("Реєстрація успішна!");
+      setSuccess("Registration successful!");
     } catch (err: any) {
-      setError(err.message || "Помилка");
+      setError(err.message || "Error");
     }
   };
 
@@ -37,12 +37,12 @@ export default function Register() {
     <div className="min-h-screen flex items-center justify-center bg-gray-900 px-4">
       <div className="w-full max-w-md bg-gray-800 p-8 rounded-2xl shadow-xl border border-gray-700">
         <h2 className="text-3xl font-bold text-white text-center mb-6">
-          Реєстрація
+          Registration
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="text-gray-300 text-sm">Ім'я користувача</label>
+            <label className="text-gray-300 text-sm">Username</label>
             <input
               type="text"
               name="username"
@@ -53,7 +53,7 @@ export default function Register() {
           </div>
 
           <div>
-            <label className="text-gray-300 text-sm">Пароль</label>
+            <label className="text-gray-300 text-sm">Password</label>
             <input
               type="password"
               name="password"
@@ -72,7 +72,7 @@ export default function Register() {
             type="submit"
             className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 transition rounded-xl text-white font-semibold shadow-lg"
           >
-            Зареєструватися
+            Register
           </button>
         </form>
       </div>
