@@ -1,19 +1,15 @@
 import Header from "./components/header/header";
 import CircleTimer from "./components/timer/timer";
 import { useState, useEffect } from "react";
-
+import { API_ENDPOINTS, fetchOptions } from "./config/api";
 
 function App() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-
-    fetch("http://localhost:8000/me", {
+    fetch(API_ENDPOINTS.ME, {
       method: "GET",
-      headers: {
-        "Accept": "application/json",
-      },
-      credentials: "include", 
+      ...fetchOptions,
     })
       .then(async (res) => {
         if (!res.ok) throw new Error("Unauthorized");
@@ -33,15 +29,12 @@ function App() {
   return (
     <div className="bg-emerald-900 h-screen w-screen">
       <Header />
-    
-      
-      { user ? (
+      {user ? (
         <div>
           <CircleTimer />
         </div>
       ) : (
-        <div>
-        </div>
+        <div></div>
       )}
     </div>
   );

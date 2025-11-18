@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { API_ENDPOINTS, fetchOptions } from "../../config/api";
 
 export default function CircleTimer() {
   const [hours, setHours] = useState(0);
@@ -15,12 +16,9 @@ export default function CircleTimer() {
 
   // Завантажуємо дані користувача при монтуванні компонента
   useEffect(() => {
-    fetch("http://localhost:8000/me", {
+    fetch(API_ENDPOINTS.ME, {
       method: "GET",
-      headers: {
-        "Accept": "application/json",
-      },
-      credentials: "include",
+      ...fetchOptions,
     })
       .then(async (res) => {
         if (!res.ok) throw new Error("Unauthorized");
@@ -47,12 +45,9 @@ export default function CircleTimer() {
     console.log("Earned points:", earnedPoints);
     
     try {
-      const response = await fetch(`http://localhost:8000/update-points/${earnedPoints}`, {
+      const response = await fetch(API_ENDPOINTS.UPDATE_POINTS(earnedPoints), {
         method: "GET",
-        headers: {
-          "Accept": "application/json",
-        },
-        credentials: "include"
+        ...fetchOptions,
       });
       
       console.log("Response status:", response.status);
@@ -67,7 +62,6 @@ export default function CircleTimer() {
       console.log("Server response:", data);
       
       if (data.success) {
-        // Оновлюємо локальний стан з даних сервера
         setPoints(data.total_points);
         console.log(`✅ Points updated! Old: ${data.old_points}, New: ${data.new_points}`);
         return true;
@@ -86,16 +80,13 @@ export default function CircleTimer() {
       console.log("⏰ Timer finished!");
       setRunning(false);
       
-      // Нараховуємо бали (1 бал за кожні 5 секунд)
       const earnedPoints = Math.floor(inputTime / 5);
       console.log("Calculated earned points:", earnedPoints);
       console.log("Input time was:", inputTime, "seconds");
       
-      // Показуємо анімацію
       setShowPointsAnimation(true);
       setTimeout(() => setShowPointsAnimation(false), 2000);
       
-      // Відправляємо бали на сервер
       updatePointsOnServer(earnedPoints);
       
       return;
@@ -139,12 +130,10 @@ export default function CircleTimer() {
     <div className="text-white flex flex-col items-center p-6 gap-4">
       <h2 className="text-2xl font-semibold">Круговий таймер</h2>
       
-      {/* Відображення балів */}
       <div className="bg-emerald-800 px-6 py-3 rounded-lg shadow-lg">
         <span className="text-xl font-bold">🏆 Бали: {points}</span>
       </div>
 
-      {/* Анімація нарахування балів */}
       {showPointsAnimation && (
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 animate-bounce">
           <span className="text-5xl font-bold text-yellow-400">

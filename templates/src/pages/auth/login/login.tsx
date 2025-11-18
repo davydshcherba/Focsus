@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { API_ENDPOINTS,fetchOptions } from "../../../config/api";
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -7,52 +8,45 @@ export default function Login() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-const LOGIN_URL = "http://localhost:8000/login"; 
-const handleSubmit = async (e: React.FormEvent) => { 
-  e.preventDefault();
-  setError(null);
-  setSuccess(null);
+  const handleSubmit = async (e: React.FormEvent) => { 
+    e.preventDefault();
+    setError(null);
+    setSuccess(null);
 
-  if (!username || !password) {
-    setError("Please enter username and password");
-    return;
-  }
-
-  setLoading(true);
-
-  try {
-    
-    const res = await fetch(LOGIN_URL, {
-      method: "POST",
-      headers: { 
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify({ username, password }),
-    });
-
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      setError(data?.detail || data?.message || `Error ${res.status}`);
-    } else {
-      setSuccess("Login successful");
-      
-      if (data.access_token) {
-        localStorage.setItem("access_token", data.access_token);
-      }
-
-      setTimeout(() => {
-        window.location.href = "/";
-      }, 1000);
+    if (!username || !password) {
+      setError("Please enter username and password");
+      return;
     }
-  } catch (err) {
-    setError("Something went wrong, try again");
-  } finally {
-    setLoading(false);
-  }
-};
+
+    setLoading(true);
+
+    try {
+      const res = await fetch(API_ENDPOINTS.LOGIN, {
+        method: "POST",
+        ...fetchOptions,
+        body: JSON.stringify({ username, password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data?.detail || data?.message || `Error ${res.status}`);
+      } else {
+        setSuccess("Login successful");
+        if (data.access_token) {
+          localStorage.setItem("access_token", data.access_token);
+        }
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 1000);
+      }
+    } catch (err) {
+      setError("Something went wrong, try again");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-900 px-4">
       <form
@@ -75,7 +69,6 @@ const handleSubmit = async (e: React.FormEvent) => {
           </p>
         )}
 
-        {/* Username */}
         <div>
           <label className="text-gray-300 text-sm">Username</label>
           <input
@@ -87,7 +80,6 @@ const handleSubmit = async (e: React.FormEvent) => {
           />
         </div>
 
-        {/* Password */}
         <div>
           <label className="text-gray-300 text-sm">Password</label>
           <input
@@ -99,7 +91,6 @@ const handleSubmit = async (e: React.FormEvent) => {
           />
         </div>
 
-        {/* Button */}
         <button
           type="submit"
           disabled={loading}
@@ -108,7 +99,7 @@ const handleSubmit = async (e: React.FormEvent) => {
           {loading ? "Loading..." : "Login"}
         </button>
 
-        <p className="text-xs text-gray-400 text-center">POST → {LOGIN_URL}</p>
+        <p className="text-xs text-gray-400 text-center">POST → {API_ENDPOINTS.LOGIN}</p>
       </form>
     </div>
   );

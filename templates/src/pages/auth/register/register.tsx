@@ -1,11 +1,11 @@
 import { useState } from "react";
+import { API_ENDPOINTS, fetchOptions } from "../../../config/api";
 
 export default function Register() {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
   });
-
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
@@ -19,14 +19,13 @@ export default function Register() {
     setSuccess("");
 
     try {
-      const res = await fetch("http://localhost:8000/register", {
+      const res = await fetch(API_ENDPOINTS.REGISTER, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        ...fetchOptions,
         body: JSON.stringify(formData),
       });
 
       if (!res.ok) throw new Error("Registration error");
-
       setSuccess("Registration successful!");
     } catch (err: any) {
       setError(err.message || "Error");

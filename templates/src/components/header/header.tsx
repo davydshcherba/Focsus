@@ -1,16 +1,13 @@
 import { useEffect, useState } from "react";
+import { API_ENDPOINTS, fetchOptions } from "../../config/api";
 
 export default function Header() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-
-    fetch("http://localhost:8000/me", {
+    fetch(API_ENDPOINTS.ME, { 
       method: "GET",
-      headers: {
-        "Accept": "application/json",
-      },
-      credentials: "include", 
+      ...fetchOptions,
     })
       .then(async (res) => {
         if (!res.ok) throw new Error("Unauthorized");
@@ -32,14 +29,27 @@ export default function Header() {
       <h1 className="text-white text-4xl font-bold">
         Hello {user ? (user as any).username : "Guest"}
       </h1>
+
       {user ? (
-      <div className="flex gap-4 pr-7">
-        <button className="text-white hover:text-gray-300 transition-colors  px-4 py-2 rounded-full bg-blue-500">Menu</button>
-      </div>
+        <div className="flex gap-4 pr-7">
+          <button className="text-white hover:text-gray-300 transition-colors px-4 py-2 rounded-full bg-blue-500">
+            Menu
+          </button>
+        </div>
       ) : (
         <div className="flex gap-4 pr-7">
-          <a href="/login" className="text-white hover:text-gray-300 transition-colors  px-4 py-2 rounded-md">Login</a>
-          <a href="/register" className="text-white hover:text-gray-300 transition-colors bg-blue-500 px-4 py-2 rounded-md">Register</a>
+          <a
+            href="/login"
+            className="text-white hover:text-gray-300 transition-colors px-4 py-2 rounded-md"
+          >
+            Login
+          </a>
+          <a
+            href="/register"
+            className="text-white hover:text-gray-300 transition-colors bg-blue-500 px-4 py-2 rounded-md"
+          >
+            Register
+          </a>
         </div>
       )}
     </header>
