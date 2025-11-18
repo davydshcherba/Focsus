@@ -6,11 +6,36 @@ export default function CircleTimer() {
   const [seconds, setSeconds] = useState(0);
   const [points, setPoints] = useState(0);
   const [showPointsAnimation, setShowPointsAnimation] = useState(false);
+  const [user, setUser] = useState<any>(null);
   
   const calcTotal = () => hours * 3600 + minutes * 60 + seconds;
   const [inputTime, setInputTime] = useState(calcTotal());
   const [timeLeft, setTimeLeft] = useState(calcTotal());
   const [running, setRunning] = useState(false);
+
+  // Завантажуємо дані користувача при монтуванні компонента
+  useEffect(() => {
+    fetch("http://localhost:8000/me", {
+      method: "GET",
+      headers: {
+        "Accept": "application/json",
+      },
+      credentials: "include",
+    })
+      .then(async (res) => {
+        if (!res.ok) throw new Error("Unauthorized");
+        return res.json();
+      })
+      .then((data) => {
+        if (data.success && data.user) {
+          setUser(data.user);
+          setPoints(data.user.points || 0);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching user:", error);
+      });
+  }, []);
   
   const radius = 80;
   const circumference = 2 * Math.PI * radius;
@@ -18,22 +43,39 @@ export default function CircleTimer() {
 
   // Функція для відправки балів на сервер
   const updatePointsOnServer = async (earnedPoints: number) => {
+    console.log("=== SENDING POINTS TO SERVER ===");
+    console.log("Earned points:", earnedPoints);
+    
     try {
-      const response = await fetch("http://localhost:8000/update-points", {
-        method: "POST",
+      const response = await fetch(`http://localhost:8000/update-points/${earnedPoints}`, {
+        method: "GET",
         headers: {
-          "Content-Type": "application/json",
           "Accept": "application/json",
         },
-        credentials: "include",
-        body: JSON.stringify({ points: earnedPoints })
+        credentials: "include"
       });
       
+      console.log("Response status:", response.status);
+      
       if (!response.ok) {
-        console.error("Failed to update points on server");
+        const errorText = await response.text();
+        console.error("Failed to update points on server:", errorText);
+        return false;
       }
+
+      const data = await response.json();
+      console.log("Server response:", data);
+      
+      if (data.success) {
+        // Оновлюємо локальний стан з даних сервера
+        setPoints(data.total_points);
+        console.log(`✅ Points updated! Old: ${data.old_points}, New: ${data.new_points}`);
+        return true;
+      }
+      return false;
     } catch (error) {
-      console.error("Error updating points:", error);
+      console.error("❌ Error updating points:", error);
+      return false;
     }
   };
 
@@ -41,11 +83,13 @@ export default function CircleTimer() {
     if (!running) return;
     
     if (timeLeft <= 0) {
+      console.log("⏰ Timer finished!");
       setRunning(false);
       
       // Нараховуємо бали (1 бал за кожні 5 секунд)
-      const earnedPoints = Math.floor(inputTime / 5); // 5 секунд
-      setPoints(prev => prev + earnedPoints);
+      const earnedPoints = Math.floor(inputTime / 5);
+      console.log("Calculated earned points:", earnedPoints);
+      console.log("Input time was:", inputTime, "seconds");
       
       // Показуємо анімацію
       setShowPointsAnimation(true);
