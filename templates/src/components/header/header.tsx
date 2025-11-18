@@ -4,13 +4,13 @@ export default function Header() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    // Don't get token from localStorage since backend expects cookie
+
     fetch("http://localhost:8000/me", {
       method: "GET",
       headers: {
         "Accept": "application/json",
       },
-      credentials: "include", // This sends cookies with the request
+      credentials: "include", 
     })
       .then(async (res) => {
         if (!res.ok) throw new Error("Unauthorized");
@@ -28,12 +28,20 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="flex justify-between items-center p-4">
+    <header className="flex justify-between items-center p-8">
       <h1 className="text-white text-4xl font-bold">
         Hello {user ? (user as any).username : "Guest"}
       </h1>
-      <a href="/login">Login</a>
-      <a href="/register">Register</a>
+      {user ? (
+      <div className="flex gap-4 pr-7">
+        <button className="text-white hover:text-gray-300 transition-colors  px-4 py-2 rounded-full bg-blue-500">Menu</button>
+      </div>
+      ) : (
+        <div className="flex gap-4 pr-7">
+          <a href="/login" className="text-white hover:text-gray-300 transition-colors  px-4 py-2 rounded-md">Login</a>
+          <a href="/register" className="text-white hover:text-gray-300 transition-colors bg-blue-500 px-4 py-2 rounded-md">Register</a>
+        </div>
+      )}
     </header>
   );
 }

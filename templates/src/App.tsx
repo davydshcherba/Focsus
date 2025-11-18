@@ -1,14 +1,48 @@
 import Header from "./components/header/header";
 import CircleTimer from "./components/timer/timer";
+import { useState, useEffect } from "react";
+
 
 function App() {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+
+    fetch("http://localhost:8000/me", {
+      method: "GET",
+      headers: {
+        "Accept": "application/json",
+      },
+      credentials: "include", 
+    })
+      .then(async (res) => {
+        if (!res.ok) throw new Error("Unauthorized");
+        return res.json();
+      })
+      .then((data) => {
+        if (data.success && data.user) {
+          setUser(data.user);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching user:", error);
+        setUser(null);
+      });
+  }, []);
+
   return (
     <div className="bg-emerald-900 h-screen w-screen">
       <Header />
-
-      <div>
-        <CircleTimer />
-      </div>
+    
+      
+      { user ? (
+        <div>
+          <CircleTimer />
+        </div>
+      ) : (
+        <div>
+        </div>
+      )}
     </div>
   );
 }
