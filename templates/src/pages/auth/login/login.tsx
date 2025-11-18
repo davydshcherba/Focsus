@@ -8,7 +8,7 @@ export default function Login() {
   const [success, setSuccess] = useState<string | null>(null);
 
 const LOGIN_URL = "http://localhost:8000/login"; // замість 127.0.0.1
-const handleSubmit = async (e: React.FormEvent) => {
+const handleSubmit = async (e: React.FormEvent) => { 
   e.preventDefault();
   setError(null);
   setSuccess(null);
