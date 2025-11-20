@@ -27,7 +27,7 @@ function App() {
   }, []);
 
   return (
-    <div className="bg-emerald-900 h-screen w-screen">
+    <div className="bg-[#0d0d0d] text-white font-black h-screen w-screen">
       <Header />
       {user ? (
         <div>
@@ -38,6 +38,7 @@ function App() {
       )}
     </div>
   );
+  
 }
 
 export default App;

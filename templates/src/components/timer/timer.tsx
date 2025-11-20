@@ -127,107 +127,111 @@ export default function CircleTimer() {
   };
 
   return (
-    <div className="text-white flex flex-col items-center p-6 gap-4">
-      <h2 className="text-2xl font-semibold">Круговий таймер</h2>
-      
-      <div className="bg-emerald-800 px-6 py-3 rounded-lg shadow-lg">
-        <span className="text-xl font-bold">🏆 Бали: {points}</span>
-      </div>
+<div className="text-white flex flex-col items-center p-6 gap-4">
 
-      {showPointsAnimation && (
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 animate-bounce">
-          <span className="text-5xl font-bold text-yellow-400">
-            +{Math.floor(inputTime / 5)} 🎉
-          </span>
-        </div>
-      )}
-      
-      <div className="flex gap-3 bg-emerald-900 p-4 rounded-xl shadow-lg">
-        <input
-          type="number"
-          className="p-2 rounded-lg text-black w-20 bg-white shadow-inner border-2 border-emerald-700"
-          value={hours}
-          onChange={(e) => setHours(Number(e.target.value))}
-          placeholder="Год"
-          min={0}
-          disabled={running}
-        />
-        <input
-          type="number"
-          className="p-2 rounded-lg text-black w-20 bg-white shadow-inner border-2 border-emerald-700"
-          value={minutes}
-          onChange={(e) => setMinutes(Number(e.target.value))}
-          placeholder="Хв"
-          min={0}
-          disabled={running}
-        />
-        <input
-          type="number"
-          className="p-2 rounded-lg text-black w-20 bg-white shadow-inner border-2 border-emerald-700"
-          value={seconds}
-          onChange={(e) => setSeconds(Number(e.target.value))}
-          placeholder="Сек"
-          min={0}
-          disabled={running}
-        />
-      </div>
-      
-      <div className="relative w-48 h-48 flex items-center justify-center">
-        <svg width="200" height="200">
-          <circle
-            cx="100"
-            cy="100"
-            r={radius}
-            stroke="#1e293b"
-            strokeWidth="12"
-            fill="none"
-          />
-          <circle
-            cx="100"
-            cy="100"
-            r={radius}
-            stroke="#10b981"
-            strokeWidth="12"
-            fill="none"
-            strokeDasharray={circumference}
-            strokeDashoffset={circumference - progress}
-            strokeLinecap="round"
-            style={{ 
-              transition: "stroke-dashoffset 1s linear",
-              transform: "rotate(-90deg)",
-              transformOrigin: "center"
-            }}
-          />
-        </svg>
-        <span className="absolute text-3xl font-mono">{formatTime(timeLeft)}</span>
-      </div>
-      
-      <div className="flex gap-3 mt-2">
-        <button 
-          onClick={startTimer} 
-          disabled={running}
-          className="bg-green-600 px-4 py-2 rounded-xl hover:bg-green-700 disabled:bg-gray-500 disabled:cursor-not-allowed transition-colors"
-        >
-          Start
-        </button>
-        <button 
-          onClick={stopTimer} 
-          disabled={!running}
-          className="bg-yellow-600 px-4 py-2 rounded-xl hover:bg-yellow-700 disabled:bg-gray-500 disabled:cursor-not-allowed transition-colors"
-        >
-          Stop
-        </button>
-        <button 
-          onClick={resetTimer} 
-          className="bg-red-600 px-4 py-2 rounded-xl hover:bg-red-700 transition-colors"
-        >
-          Reset
-        </button>
-      </div>
-      
-      <div className="text-sm text-gray-300 mt-2">
-        💡 Ви отримуєте 1 бал за кожні 5 секунд таймера
-      </div>
-    </div>
+<h2 className="text-2xl font-semibold">Круговий таймер</h2>
+    
+<div className="bg-[#1e293b] px-6 py-3 rounded-lg shadow-lg">
+  <span className="text-xl font-bold">🏆 Бали: {points}</span>
+</div>
+
+{showPointsAnimation && (
+  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 animate-bounce">
+    <span className="text-5xl font-bold text-yellow-400">
+      +{Math.floor(inputTime / 5)} 🎉
+    </span>
+  </div>
+)}
+
+<div className="flex gap-3 bg-[#0f172a] p-4 rounded-xl shadow-lg">
+  <input
+    type="number"
+    className="p-2 rounded-lg text-white w-20 bg-[#1e293b] shadow-inner border-2 border-emerald-600"
+    value={hours}
+    onChange={(e) => setHours(Number(e.target.value))}
+    placeholder="Год"
+    min={0}
+    disabled={running}
+  />
+  <input
+    type="number"
+    className="p-2 rounded-lg text-white w-20 bg-[#1e293b] shadow-inner border-2 border-emerald-600"
+    value={minutes}
+    onChange={(e) => setMinutes(Number(e.target.value))}
+    placeholder="Хв"
+    min={0}
+    disabled={running}
+  />
+  <input
+    type="number"
+    className="p-2 rounded-lg text-white w-20 bg-[#1e293b] shadow-inner border-2 border-emerald-600"
+    value={seconds}
+    onChange={(e) => setSeconds(Number(e.target.value))}
+    placeholder="Сек"
+    min={0}
+    disabled={running}
+  />
+</div>
+
+<div className="relative w-48 h-48 flex items-center justify-center">
+  <svg width="200" height="200">
+    <circle
+      cx="100"
+      cy="100"
+      r={radius}
+      stroke="#334155"
+      strokeWidth="12"
+      fill="none"
+    />
+    <circle
+      cx="100"
+      cy="100"
+      r={radius}
+      stroke="#10b981"
+      strokeWidth="12"
+      fill="none"
+      strokeDasharray={circumference}
+      strokeDashoffset={circumference - progress}
+      strokeLinecap="round"
+      style={{ 
+        transition: "stroke-dashoffset 1s linear",
+        transform: "rotate(-90deg)",
+        transformOrigin: "center"
+      }}
+    />
+  </svg>
+  <span className="absolute text-3xl font-mono text-white">
+    {formatTime(timeLeft)}
+  </span>
+</div>
+
+<div className="flex gap-3 mt-2">
+  <button 
+    onClick={startTimer} 
+    disabled={running}
+    className="bg-green-600 px-4 py-2 rounded-xl hover:bg-green-700 disabled:bg-gray-700 disabled:cursor-not-allowed transition-colors"
+  >
+    Start
+  </button>
+  <button 
+    onClick={stopTimer} 
+    disabled={!running}
+    className="bg-yellow-600 px-4 py-2 rounded-xl hover:bg-yellow-700 disabled:bg-gray-700 disabled:cursor-not-allowed transition-colors"
+  >
+    Stop
+  </button>
+  <button 
+    onClick={resetTimer} 
+    className="bg-red-600 px-4 py-2 rounded-xl hover:bg-red-700 transition-colors"
+  >
+    Reset
+  </button>
+</div>
+
+<div className="text-sm text-gray-400 mt-2">
+  💡 Ви отримуєте 1 бал за кожні 5 секунд таймера
+</div>
+</div>
+
   );
 }
