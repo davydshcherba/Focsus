@@ -43,9 +43,7 @@ export default function Header() {
           logoAlt="Company Logo"
           items={[
             { label: "Home", href: "/" },
-            { label: "About", href: "/about" },
-            { label: "Services", href: "/services" },
-            { label: "Contact", href: "/contact" },
+            { label: "Trackers", href: "/trackers" },
           ]}
           activeHref="/"
           className="custom-nav"

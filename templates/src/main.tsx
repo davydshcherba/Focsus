@@ -5,11 +5,21 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App";
 import Login from "./pages/auth/login/login";
 import Register from "./pages/auth/register/register";
+import TimeTracker from "./pages/trackers/timeTracker/timeTracker"
+import TrackersList from "./pages/trackers/trackersList";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
+  },
+  { 
+    path: "trackers",
+    element: <TrackersList/>
+  },
+  { 
+    path: "trackers/time",
+    element: <TimeTracker/>
   },
   {
     path: "/login",
