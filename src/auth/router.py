@@ -10,7 +10,7 @@ from pydantic import BaseModel
 
 auth_router = APIRouter()
 
-# Схема для оновлення балів
+
 class UpdatePointsSchema(BaseModel):
     points: int
 
@@ -89,19 +89,20 @@ def get_current_user(
     token_payload = Depends(security.access_token_required),
     db: Session = Depends(get_db)
 ):
-    user_id = int(token_payload.sub)  
-    user = db.query(User).filter(User.id == user_id).first()  # type: ignore
+    user_id = int(token_payload.sub)
+
+    user = db.query(User).filter(User.id == user_id).first()
+
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
+
     return {
-        "success": True,
-        "user": {
-            "id": user.id,
-            "username": user.username,
-            "is_admin": user.is_admin,
-            "points": user.points,
-        }
+        "id": user.id,
+        "username": user.username,
+        "is_admin": user.is_admin,
+        "points": user.points
     }
+
 
 @auth_router.get("/update-points/{points}")
 def update_points(
@@ -109,9 +110,6 @@ def update_points(
     db: Session = Depends(get_db),
     token_payload = Depends(security.access_token_required)
 ):
-    """
-    Оновлює бали користувача після завершення таймера
-    """
     print(f"=== UPDATE POINTS ===")
     print(f"Points to add: {points}")
     
