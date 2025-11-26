@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { API_ENDPOINTS,fetchOptions } from "../../../config/api";
+import { API_ENDPOINTS, fetchOptions } from "../../../config/api";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -8,7 +9,9 @@ export default function Login() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => { 
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setSuccess(null);
@@ -25,6 +28,7 @@ export default function Login() {
         method: "POST",
         ...fetchOptions,
         body: JSON.stringify({ username, password }),
+        credentials: "include",
       });
 
       const data = await res.json();
@@ -33,12 +37,18 @@ export default function Login() {
         setError(data?.detail || data?.message || `Error ${res.status}`);
       } else {
         setSuccess("Login successful");
+
+        // Якщо сервер видає токен, кладемо його в cookie
         if (data.access_token) {
-          localStorage.setItem("access_token", data.access_token);
+          document.cookie = `access_token=${data.access_token}; path=/; Secure; SameSite=Lax`;
         }
+
+        // 🔥 Запускаємо подію оновлення юзера
+        window.dispatchEvent(new Event("user-updated"));
+
         setTimeout(() => {
-          window.location.href = "/";
-        }, 1000);
+          navigate("/");
+        }, 300);
       }
     } catch (err) {
       setError("Something went wrong, try again");
@@ -98,8 +108,6 @@ export default function Login() {
         >
           {loading ? "Loading..." : "Login"}
         </button>
-
-        <p className="text-xs text-gray-400 text-center">POST → {API_ENDPOINTS.LOGIN}</p>
       </form>
     </div>
   );
