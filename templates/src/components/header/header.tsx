@@ -13,7 +13,7 @@ export default function Header() {
         method: "GET",
         ...fetchOptions,
       });
-      
+
       if (res.ok) {
         const data = await res.json();
         setUser(data);
@@ -36,7 +36,7 @@ export default function Header() {
       console.log("🔄 User updated event received");
       fetchUser();
     };
-    
+
     window.addEventListener("user-updated", handleUserUpdate);
 
     return () => {
@@ -55,7 +55,9 @@ export default function Header() {
   return (
     <header className="flex items-center p-8 bg-[#111] text-white shadow-lg">
       <h1 className="text-4xl font-bold">
-        {user ? `Welcome Back ${user.username} 🔥 (${user.points} pts)` : "Please log in"}
+        {user
+          ? `Welcome Back ${user.username} 🔥 (${user.points} pts)`
+          : "Please log in"}
       </h1>
       {user ? (
         <div className="ml-auto">
@@ -77,16 +79,16 @@ export default function Header() {
         </div>
       ) : (
         <div className="flex gap-4 pr-7 ml-auto">
-          
+          <a
             href="/login"
             className="text-white hover:text-gray-300 transition-colors px-4 py-2 rounded-md"
-          <a>
+          >
             Login
           </a>
-          
+          <a
             href="/register"
             className="text-white bg-blue-600 hover:bg-blue-500 transition-colors px-4 py-2 rounded-md"
-          <a>
+          >
             Register
           </a>
         </div>

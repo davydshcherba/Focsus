@@ -129,11 +129,7 @@ export default function CircleTimer() {
   return (
 <div className="text-white flex flex-col items-center p-6 gap-4">
 
-<h2 className="text-2xl font-semibold">Круговий таймер</h2>
-    
-<div className="bg-[#1e293b] px-6 py-3 rounded-lg shadow-lg">
-  <span className="text-xl font-bold">🏆 Бали: {points}</span>
-</div>
+
 
 {showPointsAnimation && (
   <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 animate-bounce">
