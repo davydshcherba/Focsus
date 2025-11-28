@@ -14,7 +14,7 @@ SQLALCHEMY_DATABASE_URL = (
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL,
     echo=True,
-    pool_pre_ping=True,    # запобігає відвалюванню з'єднань
+    pool_pre_ping=True,    
 )
 
 SessionLocal = sessionmaker(

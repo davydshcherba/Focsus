@@ -46,7 +46,7 @@ def login(credentials: UserLoginSchema, response: Response, db: Session = Depend
             print("User not found!")
             raise HTTPException(status_code=401, detail="Invalid credentials")
         print(f"User found: {user.username}")
-        if not verify_password(credentials.password, user.password):
+        if not verify_password(credentials.password, user.password): # type: ignore
             print("Password verification failed!")
             raise HTTPException(status_code=401, detail="Invalid credentials")
         print("Password verified successfully")
@@ -123,7 +123,7 @@ def update_points(
             raise HTTPException(status_code=404, detail="User not found")
         
         old_points = user.points
-        user.points += points
+        user.points += points # type: ignore
         
         db.commit()
         db.refresh(user)
