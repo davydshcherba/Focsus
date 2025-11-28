@@ -14,7 +14,8 @@ export default function CircleTimer() {
   const [timeLeft, setTimeLeft] = useState(calcTotal());
   const [running, setRunning] = useState(false);
 
-  // Завантажуємо дані користувача при монтуванні компонента
+  // Завантажуємо дані користувача при монтуванні компонентаю
+  console.log(points,user);
   useEffect(() => {
     fetch(API_ENDPOINTS.ME, {
       method: "GET",
